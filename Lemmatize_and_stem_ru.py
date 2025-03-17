@@ -2,22 +2,23 @@ import os
 import nltk
 import re
 from nltk.corpus import stopwords
-from nltk.stem import PorterStemmer, WordNetLemmatizer
+from nltk.stem import SnowballStemmer  # SnowballStemmer для русского языка
+import spacy
 
 # Download necessary NLTK resources
 nltk.download('punkt')
 nltk.download('stopwords')
-nltk.download('wordnet')
-nltk.download('omw-1.4')
+
+# Initialize spaCy model for lemmatization
+nlp = spacy.load('ru_core_news_sm')
 
 # Get Russian stopwords and remove specific words if needed
 stopwords_russian = stopwords.words('russian')
 words_to_remove = ['не', 'нет']  # Removing common negations if desired
 stopwords_russian = [word for word in stopwords_russian if word not in words_to_remove]
 
-# Initialize lemmatizer and stemmer
-lemmatizer = WordNetLemmatizer()
-stemmer = PorterStemmer()
+# Initialize stemmer (SnowballStemmer is for Russian language)
+stemmer = SnowballStemmer('russian')
 
 # Define punctuation characters to remove
 punct = r'[!"#$%&()*+,\-./:;<=>?@\[\]^_`{|}~«»—*\'’‘“”]'
@@ -28,12 +29,14 @@ def process_text(text, stopwords):
     text = text.lower()
     # Remove punctuation
     text = re.sub(punct, '', text)
-    # Tokenize the text
-    words = nltk.word_tokenize(text, language="russian")
+    # Tokenize the text using spaCy for better handling of Russian text
+    doc = nlp(text)
+    words = [token.text for token in doc]
     # Remove stopwords
     words = [word for word in words if word not in stopwords]
-    # Lemmatize and stem the words
-    lemmatized_words = [lemmatizer.lemmatize(word) for word in words]
+    # Lemmatize the words using spaCy (spaCy handles lemmatization better for Russian)
+    lemmatized_words = [token.lemma_ for token in doc if token.text in words]
+    # Stem the lemmatized words
     stemmed_words = [stemmer.stem(word) for word in lemmatized_words]
     return ' '.join(stemmed_words)
 
