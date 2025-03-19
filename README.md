@@ -1,51 +1,79 @@
 # Lemmatize_and_stem_ru
+
 ## Description
-This script performs text preprocessing on Russian-language text files. It reads input text files from a specified folder, processes the text by converting it to lowercase, removing punctuation, removing stopwords, lemmatizing and stemming the words, and then saves the cleaned text files into an output folder. The script uses the NLTK library for tokenization, stopword removal, lemmatization, and stemming, making it useful for preparing Russian texts for further natural language processing (NLP) tasks or machine learning models.
+
+This script processes a set of Russian text files by:
+- Removing punctuation.
+- Tokenizing the text.
+- Removing stopwords.
+- Lemmatizing the words using the `spaCy` library.
+- Stemming the lemmatized words using `NLTK's SnowballStemmer`.
+
+The processed texts are then saved in a specified output folder.
 
 ## Functional Description
-The script performs the following steps:
-1. Reads input `.txt` files from a specified folder.
-2. Converts all text to lowercase.
-3. Removes punctuation symbols.
-4. Tokenizes the text into words.
-5. Removes stopwords (with some customizable exceptions).
-6. Lemmatizes each word using WordNet lemmatizer.
-7. Applies stemming to each word using Porter stemmer.
-8. Saves the processed text to an output folder with modified filenames.
 
-## How It Works
-1. The script uses the **NLTK** library to download necessary datasets (stopwords, wordnet, etc.).
-2. It defines a set of Russian stopwords and allows specific words to be excluded from removal.
-3. It defines a regular expression pattern to remove punctuation from the text.
-4. For each `.txt` file in the input folder:
-    - Reads the file.
-    - Applies text processing (lowercasing, punctuation removal, tokenization, stopword removal, lemmatization, stemming).
-    - Saves the cleaned text to the output folder with "_вывод" added to the filename.
-5. The processed text files are saved in UTF-8 encoding.
+### Steps Involved:
+1. **Text Preprocessing**: 
+   - Converts the text to lowercase.
+   - Removes punctuation characters.
+   - Tokenizes the text.
+   - Removes stopwords (optional: can remove specific words like negations).
+   - Lemmatizes and stems the words to reduce them to their base form.
 
-## Input Structure
-- **Input folder path**: Folder containing original Russian `.txt` files.
-- **Output folder path**: Folder where the processed text files will be saved.
+2. **File Handling**: 
+   - The script reads each `.txt` file in a specified input folder.
+   - Processes the text in the file and saves the results in an output folder.
+   
+3. **Saving Processed Text**: 
+   - The processed text is saved in the output folder with a `_processed` suffix in the filename.
 
-You need to specify:
-- Path to the input folder containing `.txt` files.
-- Path to the output folder for saving results.
+### Key Functions
 
-## Technical Requirements
-To run the script, the following are required:
-1. Python 3.x
-2. Installed libraries:
-   - `nltk`
-   - `re`
-   - `os`
-3. Downloaded NLTK resources:
-   - `punkt`
-   - `stopwords`
-   - `wordnet`
-   - `omw-1.4`
+1. **`process_text(text, stopwords)`**:
+   - Processes the input text by:
+     - Converting it to lowercase.
+     - Removing punctuation.
+     - Tokenizing, lemmatizing, and stemming the words.
+     - Removing stopwords from the text.
 
-## Usage
-1. Specify the absolute paths to your input and output folders in the script:
-   ```python
-   input_folder = '/path/to/input/folder'
-   output_folder = '/path/to/output/folder'
+2. **`os.makedirs(output_folder, exist_ok=True)`**:
+   - Ensures that the output folder exists. If it doesn't, it creates it.
+
+3. **Text File Handling**:
+   - Reads `.txt` files from the specified input folder.
+   - Processes the text and saves it to the output folder.
+
+### Input Structure
+
+- **Input Folder**: Contains `.txt` files that need to be processed.
+- **Output Folder**: Stores the processed `.txt` files, each with `_processed` appended to its filename.
+
+### Example Workflow
+
+1. The script reads all `.txt` files from the input folder.
+2. For each file:
+   - The text is processed by:
+     - Converting to lowercase.
+     - Removing punctuation.
+     - Tokenizing and lemmatizing the words.
+     - Removing stopwords.
+     - Stemming the lemmatized words.
+3. The processed text is saved in the output folder with `_processed` in the filename.
+
+### Example Output
+
+1. **Processed Text**:
+*страховани договор страхование филиал*
+(Text after processing: punctuation removed, stopwords removed, words lemmatized and stemmed)
+
+3. **Processed File Name**:
+- If the original file is `sample.txt`, the output file will be `sample_processed.txt`.
+
+### Error Handling
+
+If any error occurs while reading or processing a file, the script will print an error message and move on to the next file.
+
+### Conclusion
+
+This script automates the process of cleaning, tokenizing, lemmatizing, and stemming Russian text data. It is useful for text preprocessing tasks, such as preparing data for natural language processing or analysis. The processed texts are saved in an output folder for further use.
